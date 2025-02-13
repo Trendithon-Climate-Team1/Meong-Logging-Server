@@ -22,12 +22,7 @@ public class UserService {
         validateIsDuplicatedUserId(signupDto.getUserId());
         validateIsDuplicatedEmail(signupDto.getEmail());
 
-        User user = User.builder()
-                .userId(signupDto.getUserId())
-                .password(passwordUtil.hashPassword(signupDto.getPassword()))
-                .email(signupDto.getEmail())
-                .nickname(signupDto.getNickname())
-                .build();
+        User user = User.createUser(signupDto, passwordUtil.hashPassword(signupDto.getPassword()));
         userRepository.save(user);
     }
 

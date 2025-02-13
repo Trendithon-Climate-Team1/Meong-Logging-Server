@@ -9,4 +9,5 @@ public class SignupDto {
     private String password;
     private String email;
     private String nickname;
+    private String petName;
 }
