@@ -23,5 +23,16 @@ public class Post {
     private String content;
     private String imageUrl;
     private String location;
+    private int likeCount;
+    private int commentCount;
     private LocalDateTime createdAt;
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public void decreaseLike() {
+        this.likeCount--;
+    }
 }
+
