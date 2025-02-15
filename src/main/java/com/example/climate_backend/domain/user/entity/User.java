@@ -1,6 +1,7 @@
 package com.example.climate_backend.domain.user.entity;
 
 import com.example.climate_backend.domain.user.dto.request.SignupDto;
+import com.example.climate_backend.domain.user.enums.Role;
 import com.example.climate_backend.domain.verification.entity.Verification;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Verification> verifications = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
 
     public static User createUser(SignupDto signupDto, String hashPassword){
         return User.builder()
@@ -41,6 +46,7 @@ public class User {
                 .email(signupDto.getEmail())
                 .nickname(signupDto.getNickname())
                 .petName(signupDto.getPetName())
+                .role(Role.ROLE_USER)
                 .build();
     }
 
