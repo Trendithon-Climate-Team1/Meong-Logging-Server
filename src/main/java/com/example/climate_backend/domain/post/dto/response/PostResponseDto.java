@@ -17,6 +17,7 @@ public class PostResponseDto {
     private String imageUrl;
     private int likeCount;
     private LocalDateTime createdAt;
+    private Long userId;
 
     public PostResponseDto(Post post){
         this.id = post.getId();
@@ -24,6 +25,7 @@ public class PostResponseDto {
         this.location = post.getLocation();
         this.imageUrl = post.getImageUrl();
         this.likeCount = post.getLikeCount();
+        this.userId = post.getUser().getId();
         this.createdAt = post.getCreatedAt();
     }
 
