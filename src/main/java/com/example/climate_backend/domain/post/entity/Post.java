@@ -34,5 +34,13 @@ public class Post {
     public void decreaseLike() {
         this.likeCount--;
     }
+
+    public void increaseComment() {
+        this.commentCount++;
+    }
+
+    public void decreaseComment() {
+        this.commentCount--;
+    }
 }
 
