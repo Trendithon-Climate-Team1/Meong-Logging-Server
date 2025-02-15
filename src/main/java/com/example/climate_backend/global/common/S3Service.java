@@ -21,7 +21,7 @@ public class S3Service {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file)  {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
@@ -29,7 +29,11 @@ public class S3Service {
                 .contentType(file.getContentType())
                 .contentLength(file.getSize())
                 .build();
-        s3Client.putObject(objectRequest, RequestBody.fromBytes(file.getBytes()));
+        try {
+            s3Client.putObject(objectRequest, RequestBody.fromBytes(file.getBytes()));
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 저장에 실패하였습니다.");
+        }
         return getFileUrl(fileName);
     }
     private String getFileUrl(String fileName){

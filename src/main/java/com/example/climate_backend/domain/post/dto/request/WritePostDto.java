@@ -8,4 +8,5 @@ import lombok.Getter;
 public class WritePostDto {
     private String content;
     private String location;
+    private Long userId;
 }
