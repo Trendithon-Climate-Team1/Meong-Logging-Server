@@ -29,7 +29,7 @@ public class CommentController {
 
     @GetMapping
     public ResponseEntity<List<CommentResDto>> getAllComment(@RequestBody CommentReqDto commentReqDto) {
-        return ResponseEntity.ok(commentService.getAllComment(commentReqDto));
+        return ResponseEntity.ok(commentService.getAllComment(commentReqDto.getPostId()));
     }
 
     @PutMapping

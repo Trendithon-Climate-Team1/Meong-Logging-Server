@@ -41,12 +41,10 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<CommentResDto> getAllComment(CommentReqDto commentReqDto) {
-        User user = userRepository.findById(commentReqDto.getUserId())
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다." + commentReqDto.getUserId()));
+    public List<CommentResDto> getAllComment(Long postId) {
 
-        Post post = postRepository.findById(commentReqDto.getPostId())
-            .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다." + commentReqDto.getPostId()));
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다." + postId));
 
         List<Comment> comments = commentRepository.findAll();
         return comments.stream()
