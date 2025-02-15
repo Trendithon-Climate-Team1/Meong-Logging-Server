@@ -1,5 +1,6 @@
 package com.example.climate_backend.domain.user.entity;
 
+import com.example.climate_backend.domain.post.entity.Post;
 import com.example.climate_backend.domain.user.dto.request.SignupDto;
 import com.example.climate_backend.domain.user.enums.Role;
 import com.example.climate_backend.domain.verification.entity.Verification;
@@ -38,6 +39,8 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
 
     public static User createUser(SignupDto signupDto, String hashPassword){
         return User.builder()
@@ -52,6 +55,6 @@ public class User {
 
     public void addVerification(Verification verification) {
         this.verifications.add(verification);
-        verification.setUser(this); // ✅ 관계 설정
+        verification.setUser(this); 
     }
 }

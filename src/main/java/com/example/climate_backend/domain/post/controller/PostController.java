@@ -6,6 +6,7 @@ import com.example.climate_backend.domain.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,8 +22,8 @@ public class PostController {
     private final PostService postService;
 
     @Operation(summary = "게시글 작성")
-    @PostMapping
-    public ResponseEntity<String> writePost(@RequestPart(value = "post") WritePostDto writePostDto, @RequestPart(required = false) MultipartFile file){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> writePost(@RequestPart(value = "post") WritePostDto writePostDto, @RequestPart(required = false, value = "file") MultipartFile file){
         postService.writePost(writePostDto, file);
         return ResponseEntity.ok("게시글 작성이 완료되었습니다.");
     }

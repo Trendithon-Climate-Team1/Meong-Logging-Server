@@ -1,9 +1,7 @@
 package com.example.climate_backend.domain.post.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.climate_backend.domain.user.entity.User;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,5 +21,28 @@ public class Post {
     private String content;
     private String imageUrl;
     private String location;
+    private int likeCount;
+    private int commentCount;
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public void decreaseLike() {
+        this.likeCount--;
+    }
+
+    public void increaseComment() {
+        this.commentCount++;
+    }
+
+    public void decreaseComment() {
+        this.commentCount--;
+    }
 }
+
