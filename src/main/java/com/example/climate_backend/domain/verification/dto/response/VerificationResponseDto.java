@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
-
 @Builder
 @Data
 public class VerificationResponseDto {
@@ -15,7 +14,7 @@ public class VerificationResponseDto {
     private String courseName;
     private String date;
     private List<Coordinate> path;
-    private String uploadedImage;
+    private List<String> uploadedImages;
     private VerificationStatus verificationStatus;
     private Long verificationId;
 
@@ -25,10 +24,9 @@ public class VerificationResponseDto {
                 .courseName(verification.getCourseName())
                 .date(verification.getDate())
                 .path(verification.getPath())
-                .uploadedImage(verification.getUploadedImage())
+                .uploadedImages(verification.getUploadedImages())
                 .verificationStatus(verification.getStatus())
                 .verificationId(verification.getId())
                 .build();
     }
-
 }

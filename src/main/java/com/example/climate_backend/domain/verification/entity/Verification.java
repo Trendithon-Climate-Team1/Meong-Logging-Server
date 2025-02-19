@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
 @Entity
 @Getter
 @Builder
@@ -34,21 +33,21 @@ public class Verification {
     @CollectionTable(name = "verification_path", joinColumns = @JoinColumn(name = "verification_id"))
     private List<Coordinate> path;
 
-    @Setter
-    private String uploadedImage;
+    @ElementCollection
+    @CollectionTable(name = "verification_images", joinColumns = @JoinColumn(name = "verification_id"))
+    private List<String> uploadedImages;  // 다중 이미지 지원
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VerificationStatus status;
 
-
-    public static Verification createFromDto(VerificationRequestDto dto,String imageUrl, User user) {
+    public static Verification createFromDto(VerificationRequestDto dto, List<String> imageUrls, User user) {
         return Verification.builder()
                 .user(user)
                 .courseName(dto.getCourseName())
                 .date(dto.getDate())
                 .path(dto.getPath())
-                .uploadedImage(imageUrl)
+                .uploadedImages(imageUrls)
                 .status(VerificationStatus.PENDING)
                 .build();
     }

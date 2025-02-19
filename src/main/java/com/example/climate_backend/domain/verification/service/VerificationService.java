@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,44 +27,40 @@ public class VerificationService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
 
-    public void saveVerification(VerificationRequestDto verificationDto, MultipartFile file) {
+    public void saveVerification(VerificationRequestDto verificationDto, MultipartFile[] files) {
         User user = findExistingUserByUserId(verificationDto.getUserId());
 
-        String imageUrl=null;
-        if (file != null) imageUrl = s3Service.uploadImage(file);
+        List<String> imageUrls = new ArrayList<>();
+        if (files != null) {
+            for (MultipartFile file : files) {
+                try {
+                    imageUrls.add(s3Service.uploadImage(file)); // 다중 이미지 업로드
+                } catch (Exception e) {
+                    throw new RuntimeException("이미지 업로드 실패", e);
+                }
+            }
+        }
 
-
-
-        Verification verification = Verification.createFromDto(verificationDto,imageUrl, user);
+        Verification verification = Verification.createFromDto(verificationDto, imageUrls, user);
         verificationRepository.save(verification);
     }
 
     public List<VerificationResponseDto> getVerificationsByUser(String userId) {
         User user = findExistingUserByUserId(userId);
-
         return verificationRepository.findByUser(user).stream()
                 .map(VerificationResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
-
     public List<VerificationResponseDto> getVerificationsByStatus(VerificationStatus status) {
-        log.info("status : ",status);
-        List<Verification> verifications;
-
-        // status가 null이면 전체 조회, 아니면 특정 상태만 조회
-        if (status == null) {
-            verifications = verificationRepository.findAll();
-        } else {
-            verifications = verificationRepository.findByStatus(status);
-        }
+        log.info("status : {}", status);
+        List<Verification> verifications = (status == null) ? verificationRepository.findAll()
+                : verificationRepository.findByStatus(status);
 
         return verifications.stream()
                 .map(VerificationResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
-
-
 
     public VerificationResponseDto getVerificationById(Long verificationId) {
         Verification verification = verificationRepository.findById(verificationId)
@@ -76,3 +73,4 @@ public class VerificationService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
     }
 }
+

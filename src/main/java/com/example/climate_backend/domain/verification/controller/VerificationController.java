@@ -25,8 +25,8 @@ public class VerificationController {
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<String> saveVerification(
             @RequestPart(value = "verification") VerificationRequestDto verificationDto,
-            @RequestPart MultipartFile file) {
-        verificationService.saveVerification(verificationDto, file);
+            @RequestPart(value = "files", required = false) MultipartFile[] files) {
+        verificationService.saveVerification(verificationDto, files);
         return ResponseEntity.ok("플로깅 인증이 저장되었습니다.");
     }
 
