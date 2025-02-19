@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class VerificationResponseDto {
     private String userId;
+    private String petName;
     private String courseName;
     private String date;
     private List<Coordinate> path;
@@ -21,6 +22,7 @@ public class VerificationResponseDto {
     public static VerificationResponseDto fromEntity(Verification verification) {
         return VerificationResponseDto.builder()
                 .userId(verification.getUser().getUserId())
+                .petName(verification.getUser().getPetName())
                 .courseName(verification.getCourseName())
                 .date(verification.getDate())
                 .path(verification.getPath())
