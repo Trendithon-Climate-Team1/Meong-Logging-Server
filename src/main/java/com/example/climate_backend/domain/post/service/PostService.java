@@ -1,5 +1,6 @@
 package com.example.climate_backend.domain.post.service;
 
+import com.example.climate_backend.domain.post.dto.request.DeletePostDto;
 import com.example.climate_backend.domain.post.dto.request.UpdatePostDto;
 import com.example.climate_backend.domain.post.dto.request.WritePostDto;
 import com.example.climate_backend.domain.post.dto.response.PostResponseDto;
@@ -49,6 +50,17 @@ public class PostService {
             throw new RuntimeException("게시글 수정 권한이 없습니다.");
         post.update(updatePostDto);
         postRepository.save(post);
+    }
+
+    public void deletePost(Long id, DeletePostDto deletePostDto) {
+        User user = userRepository.findById(deletePostDto.getUserId())
+                .orElseThrow(()-> new RuntimeException("존재하지 않는 유저입니다."));
+        Post post = findPostById(id);
+        if(post.getUser() != user)
+            throw new RuntimeException("게시글 삭제 권한이 없습니다.");
+        if(post.getImageUrl() != null)
+            s3Service.deleteImage(post.getImageUrl());
+        postRepository.delete(post);
     }
 
     public PostResponseDto getPostById(Long postId) {
