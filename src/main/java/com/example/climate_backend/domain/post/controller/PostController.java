@@ -1,5 +1,7 @@
 package com.example.climate_backend.domain.post.controller;
 
+import com.example.climate_backend.domain.post.dto.request.DeletePostDto;
+import com.example.climate_backend.domain.post.dto.request.UpdatePostDto;
 import com.example.climate_backend.domain.post.dto.request.WritePostDto;
 import com.example.climate_backend.domain.post.dto.response.PostResponseDto;
 import com.example.climate_backend.domain.post.service.PostService;
@@ -38,6 +40,20 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long id){
         return ResponseEntity.ok(postService.getPostById(id));
+    }
+
+    @Operation(summary = "게시글 수정")
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody UpdatePostDto updatePostDto){
+        postService.updatePost(id, updatePostDto);
+        return ResponseEntity.ok("게시글이 수정되었습니다.");
+    }
+
+    @Operation(summary = "게시글 삭제")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody DeletePostDto deletePostDto){
+        postService.deletePost(id, deletePostDto);
+        return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 
 }
