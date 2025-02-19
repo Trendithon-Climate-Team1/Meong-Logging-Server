@@ -32,7 +32,7 @@ public class SwaggerConfig {
 
     private List<Server> servers() {
         return List.of(new Server()
-                .url("http://localhost:8080")
+                .url("http://3.34.183.9:8080")
                 .description("Configured Server"));
     }
 

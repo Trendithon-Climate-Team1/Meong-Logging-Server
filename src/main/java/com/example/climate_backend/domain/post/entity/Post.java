@@ -1,5 +1,6 @@
 package com.example.climate_backend.domain.post.entity;
 
+import com.example.climate_backend.domain.post.dto.request.UpdatePostDto;
 import com.example.climate_backend.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,10 @@ public class Post {
 
     public void decreaseComment() {
         this.commentCount--;
+    }
+
+    public void update(UpdatePostDto updatePostDto) {
+        this.content = updatePostDto.getContent();
     }
 }
 
