@@ -28,9 +28,10 @@ public class PostService {
     private final PostRepository postRepository;
     private final S3Service s3Service;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public void writePost(WritePostDto writePostDto, MultipartFile file) {
-        User user = userService.findById(writePostDto.getUserId());
+        User user = getUserById(writePostDto.getUserId());
         String imgUrl = null;
         if (file != null) imgUrl = s3Service.uploadImage(file);
         Post post = Post.builder()
@@ -44,7 +45,7 @@ public class PostService {
     }
 
     public void updatePost(Long id, UpdatePostDto updatePostDto) {
-        User user = userService.findById(updatePostDto.getUserId());
+        User user = getUserById(updatePostDto.getUserId());
         Post post = findPostById(id);
         if(post.getUser() != user)
             throw new RuntimeException("게시글 수정 권한이 없습니다.");
@@ -53,7 +54,7 @@ public class PostService {
     }
 
     public void deletePost(Long id, DeletePostDto deletePostDto) {
-        User user = userService.findById(deletePostDto.getUserId());
+        User user = getUserById(deletePostDto.getUserId());
         Post post = findPostById(id);
         if(post.getUser() != user)
             throw new RuntimeException("게시글 삭제 권한이 없습니다.");
@@ -90,6 +91,11 @@ public class PostService {
         return posts.stream()
                 .map(PostResponseDto::new)
                 .toList();
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
     }
 
 }

@@ -57,8 +57,4 @@ public class UserService {
         }
     }
 
-    public User findById(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("존재하지 않는 유저입니다."));
-    }
 }
