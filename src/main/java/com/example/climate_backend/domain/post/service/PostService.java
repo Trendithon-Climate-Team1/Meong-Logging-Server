@@ -10,9 +10,12 @@ import com.example.climate_backend.domain.user.entity.User;
 import com.example.climate_backend.domain.user.repository.UserRepository;
 import com.example.climate_backend.domain.user.service.UserService;
 import com.example.climate_backend.global.common.S3Service;
+import com.example.climate_backend.global.common.pagination.PageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -23,13 +26,11 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final S3Service s3Service;
     private final UserService userService;
 
     public void writePost(WritePostDto writePostDto, MultipartFile file) {
-        User user = userRepository.findById(writePostDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        User user = userService.findById(writePostDto.getUserId());
         String imgUrl = null;
         if (file != null) imgUrl = s3Service.uploadImage(file);
         Post post = Post.builder()
@@ -43,8 +44,7 @@ public class PostService {
     }
 
     public void updatePost(Long id, UpdatePostDto updatePostDto) {
-        User user = userRepository.findById(updatePostDto.getUserId())
-                .orElseThrow(()-> new RuntimeException("존재하지 않는 유저입니다."));
+        User user = userService.findById(updatePostDto.getUserId());
         Post post = findPostById(id);
         if(post.getUser() != user)
             throw new RuntimeException("게시글 수정 권한이 없습니다.");
@@ -53,8 +53,7 @@ public class PostService {
     }
 
     public void deletePost(Long id, DeletePostDto deletePostDto) {
-        User user = userRepository.findById(deletePostDto.getUserId())
-                .orElseThrow(()-> new RuntimeException("존재하지 않는 유저입니다."));
+        User user = userService.findById(deletePostDto.getUserId());
         Post post = findPostById(id);
         if(post.getUser() != user)
             throw new RuntimeException("게시글 삭제 권한이 없습니다.");
@@ -68,12 +67,27 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
-    public Post findPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+    public List<PostResponseDto> getPostList() {
+        return mapToDtoList(postRepository.findAll(getSortByRecent()));
     }
 
-    public List<PostResponseDto> getPostList() {
-        return postRepository.findAll().stream()
+    public List<PostResponseDto> getPostList(int page, int size) {
+        PageDto pageDto = new PageDto(page, size);
+        Pageable pageable = PageRequest.of(pageDto.getPage(), pageDto.getSize(), getSortByRecent());
+        return mapToDtoList(postRepository.findAll(pageable).getContent());
+    }
+
+    private Post findPostById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+    }
+
+    private static Sort getSortByRecent() {
+        return Sort.by(Sort.Order.desc("createdAt"));
+    }
+
+    private List<PostResponseDto> mapToDtoList(List<Post> posts) {
+        return posts.stream()
                 .map(PostResponseDto::new)
                 .toList();
     }

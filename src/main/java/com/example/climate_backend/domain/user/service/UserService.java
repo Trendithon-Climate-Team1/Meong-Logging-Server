@@ -56,4 +56,9 @@ public class UserService {
             throw new RuntimeException("이미 사용 중인 이메일입니다.");
         }
     }
+
+    public User findById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("존재하지 않는 유저입니다."));
+    }
 }

@@ -5,6 +5,7 @@ import com.example.climate_backend.domain.post.dto.request.UpdatePostDto;
 import com.example.climate_backend.domain.post.dto.request.WritePostDto;
 import com.example.climate_backend.domain.post.dto.response.PostResponseDto;
 import com.example.climate_backend.domain.post.service.PostService;
+import com.example.climate_backend.global.common.pagination.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,16 @@ public class PostController {
     }
 
     @Operation(summary = "모든 게시글 조회")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<PostResponseDto>> getPostList(){
         return ResponseEntity.ok(postService.getPostList());
+    }
+
+    @Operation(summary = "모든 게시글 페이지별 조회")
+    @GetMapping
+    public ResponseEntity<List<PostResponseDto>> getPostList(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.getPostList(page, size));
     }
 
     @Operation(summary = "게시글 상세 조회")
