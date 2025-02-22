@@ -46,6 +46,7 @@ public class MyPageService {
             .build();
     }
 
+    @Transactional
     public void updateProfileImage(String userId, MultipartFile file) {
         User user = findExistingUserByUserId(userId);
         s3Service.deleteImage(user.getProfileImg());
