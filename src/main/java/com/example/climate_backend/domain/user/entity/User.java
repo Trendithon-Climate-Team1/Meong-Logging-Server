@@ -1,7 +1,9 @@
 package com.example.climate_backend.domain.user.entity;
 
 import com.example.climate_backend.domain.post.entity.Post;
+import com.example.climate_backend.domain.user.dto.request.MyPageReqDto;
 import com.example.climate_backend.domain.user.dto.request.SignupDto;
+import com.example.climate_backend.domain.user.dto.response.MyPageResDto;
 import com.example.climate_backend.domain.user.enums.Role;
 import com.example.climate_backend.domain.verification.entity.Verification;
 import jakarta.persistence.*;
@@ -31,6 +33,8 @@ public class User {
     @Column(nullable = false)
     private String nickname;
     private String petName;
+    private int point;
+    private String profileImg;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Verification> verifications = new ArrayList<>();
@@ -50,11 +54,24 @@ public class User {
                 .nickname(signupDto.getNickname())
                 .petName(signupDto.getPetName())
                 .role(Role.ROLE_USER)
+                .point(0)
                 .build();
     }
 
     public void addVerification(Verification verification) {
         this.verifications.add(verification);
         verification.setUser(this); 
+    }
+
+    public void update(MyPageReqDto myPageReqDto) {
+        this.userId = myPageReqDto.getUserId();
+        this.password = myPageReqDto.getPassword();
+        this.email = myPageReqDto.getEmail();
+        this.nickname = myPageReqDto.getNickname();
+        this.petName = myPageReqDto.getPetName();
+    }
+
+    public void updateProfileImage(String profileImg) {
+        this.profileImg = profileImg;
     }
 }
