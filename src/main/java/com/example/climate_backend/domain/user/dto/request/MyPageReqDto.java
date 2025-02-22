@@ -10,5 +10,4 @@ public class MyPageReqDto {
     private String email;
     private String nickname;
     private String petName;
-    private String profileImg;
 }

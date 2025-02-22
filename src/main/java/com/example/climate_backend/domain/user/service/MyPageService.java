@@ -7,17 +7,20 @@ import com.example.climate_backend.domain.user.dto.response.MyPageResDto;
 import com.example.climate_backend.domain.user.entity.User;
 import com.example.climate_backend.domain.user.repository.UserRepository;
 import com.example.climate_backend.domain.verification.dto.response.VerificationResponseDto;
+import com.example.climate_backend.global.common.S3Service;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
 
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     public MyPageResDto getMyPage(String userId) {
         User user = findExistingUserByUserId(userId);
@@ -40,21 +43,13 @@ public class MyPageService {
             .email(user.getEmail())
             .nickname(user.getNickname())
             .petName(user.getPetName())
-            .profileImg(user.getProfileImg())
             .build();
     }
 
-    public MyPageResDto updateProfileImage(String userId, MyPageReqDto myPageReqDto) {
+    public void updateProfileImage(String userId, MultipartFile file) {
         User user = findExistingUserByUserId(userId);
-        user.updateProfileImage(myPageReqDto.getProfileImg());
-
-        return MyPageResDto.builder()
-            .userId(user.getUserId())
-            .email(user.getEmail())
-            .nickname(user.getNickname())
-            .petName(user.getPetName())
-            .profileImg(user.getProfileImg())
-            .build();
+        s3Service.deleteImage(user.getProfileImg());
+        s3Service.uploadImage(file);
     }
 
     public List<PostResponseDto> getMyPosts(String userId) {
