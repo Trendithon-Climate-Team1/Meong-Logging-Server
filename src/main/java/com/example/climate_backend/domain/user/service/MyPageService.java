@@ -49,8 +49,12 @@ public class MyPageService {
     @Transactional
     public void updateProfileImage(String userId, MultipartFile file) {
         User user = findExistingUserByUserId(userId);
-        s3Service.deleteImage(user.getProfileImg());
-        s3Service.uploadImage(file);
+
+        if (user.getProfileImg() != null) {
+            s3Service.deleteImage(user.getProfileImg());
+        }
+
+        user.updateProfileImage(s3Service.uploadImage(file));
     }
 
     public List<PostResponseDto> getMyPosts(String userId) {
