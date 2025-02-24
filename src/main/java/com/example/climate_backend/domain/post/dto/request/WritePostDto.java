@@ -4,9 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class WritePostDto {
     private String content;
     private String location;
-    private Long userId;
+    private String userId;
 }

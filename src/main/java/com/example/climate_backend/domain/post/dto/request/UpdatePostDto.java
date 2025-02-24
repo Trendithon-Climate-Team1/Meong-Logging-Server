@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class UpdatePostDto {
     private String content;
-    private Long userId;
+    private String userId;
 }

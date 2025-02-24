@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class DeletePostDto {
-    private Long userId;
+    private String userId;
 }
