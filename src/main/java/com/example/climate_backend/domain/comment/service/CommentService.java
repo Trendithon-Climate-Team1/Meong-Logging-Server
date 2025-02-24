@@ -24,7 +24,7 @@ public class CommentService {
 
     @Transactional
     public void createComment(CommentReqDto commentReqDto) {
-        User user = userRepository.findById(commentReqDto.getUserId())
+        User user = userRepository.findByUserId(commentReqDto.getUserId())
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다." + commentReqDto.getUserId()));
 
         Post post = postRepository.findById(commentReqDto.getPostId())
@@ -61,7 +61,7 @@ public class CommentService {
     }
 
     public void deleteComment(CommentReqDto commentReqDto, Long commentId) {
-        User user = userRepository.findById(commentReqDto.getUserId())
+        User user = userRepository.findByUserId(commentReqDto.getUserId())
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다." + commentReqDto.getUserId()));
 
         Post post = postRepository.findById(commentReqDto.getPostId())

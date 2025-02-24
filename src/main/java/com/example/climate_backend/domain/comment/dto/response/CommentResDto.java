@@ -11,14 +11,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentResDto {
     private String comment;
-    private Long userId;
+    private String userId;
     private Long postId;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
     public CommentResDto(Comment comment) {
         this.comment = comment.getComment();
-        this.userId = comment.getUser().getId();
+        this.userId = comment.getUser().getUserId();
         this.postId = comment.getPost().getId();
         this.createdAt = comment.getCreatedAt();
         this.updateAt = comment.getUpdatedAt();
