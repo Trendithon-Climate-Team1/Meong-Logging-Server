@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LikeReqDto {
 
-    private Long userId;
+    private String userId;
     private Long postId;
 
-    public LikeReqDto(Long userId, Long postId) {
+    public LikeReqDto(String userId, Long postId) {
         this.userId = userId;
         this.postId = postId;
     }

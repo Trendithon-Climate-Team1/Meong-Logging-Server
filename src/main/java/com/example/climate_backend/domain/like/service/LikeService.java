@@ -23,7 +23,7 @@ public class LikeService {
 
     @Transactional
     public void insertLike(LikeReqDto likeReqDto) {
-        User user = userRepository.findById(likeReqDto.getUserId())
+        User user = userRepository.findByUserId(likeReqDto.getUserId())
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다." + likeReqDto.getUserId()));
 
         Post post = postRepository.findById(likeReqDto.getPostId())
@@ -51,7 +51,7 @@ public class LikeService {
 
     @Transactional
     public void deleteLike(LikeReqDto likeReqDto) {
-        User user = userRepository.findById(likeReqDto.getUserId())
+        User user = userRepository.findByUserId(likeReqDto.getUserId())
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다." + likeReqDto.getUserId()));
 
         Post post = postRepository.findById(likeReqDto.getPostId())
