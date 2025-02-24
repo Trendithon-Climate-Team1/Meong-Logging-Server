@@ -8,7 +8,6 @@ import com.example.climate_backend.domain.post.entity.Post;
 import com.example.climate_backend.domain.post.repository.PostRepository;
 import com.example.climate_backend.domain.user.entity.User;
 import com.example.climate_backend.domain.user.repository.UserRepository;
-import com.example.climate_backend.domain.user.service.UserService;
 import com.example.climate_backend.global.common.S3Service;
 import com.example.climate_backend.global.common.pagination.PageDto;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +26,10 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final S3Service s3Service;
-    private final UserService userService;
     private final UserRepository userRepository;
 
     public void writePost(WritePostDto writePostDto, MultipartFile file) {
-        User user = getUserById(writePostDto.getUserId());
+        User user = getUserByUserId(writePostDto.getUserId());
         String imgUrl = null;
         if (file != null) imgUrl = s3Service.uploadImage(file);
         Post post = Post.builder()
@@ -45,7 +43,7 @@ public class PostService {
     }
 
     public void updatePost(Long id, UpdatePostDto updatePostDto) {
-        User user = getUserById(updatePostDto.getUserId());
+        User user = getUserByUserId(updatePostDto.getUserId());
         Post post = findPostById(id);
         if(post.getUser() != user)
             throw new RuntimeException("게시글 수정 권한이 없습니다.");
@@ -54,7 +52,7 @@ public class PostService {
     }
 
     public void deletePost(Long id, DeletePostDto deletePostDto) {
-        User user = getUserById(deletePostDto.getUserId());
+        User user = getUserByUserId(deletePostDto.getUserId());
         Post post = findPostById(id);
         if(post.getUser() != user)
             throw new RuntimeException("게시글 삭제 권한이 없습니다.");
@@ -93,8 +91,8 @@ public class PostService {
                 .toList();
     }
 
-    private User getUserById(Long userId) {
-        return userRepository.findById(userId)
+    private User getUserByUserId(String userId) {
+        return userRepository.findByUserId((userId))
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
     }
 
