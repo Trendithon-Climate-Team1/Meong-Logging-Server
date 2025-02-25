@@ -61,4 +61,11 @@ public class Verification {
     public void reject() {
         this.status = VerificationStatus.REJECTED;
     }
+
+    public void update(VerificationRequestDto dto, List<String> imageUrls) {
+        this.courseName = dto.getCourseName();
+        this.date = dto.getDate();
+        this.path = dto.getPath();
+        this.uploadedImages = imageUrls;
+    }
 }

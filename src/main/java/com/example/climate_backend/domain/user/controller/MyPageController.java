@@ -4,6 +4,7 @@ import com.example.climate_backend.domain.post.dto.response.PostResponseDto;
 import com.example.climate_backend.domain.user.dto.request.MyPageReqDto;
 import com.example.climate_backend.domain.user.dto.response.MyPageResDto;
 import com.example.climate_backend.domain.user.service.MyPageService;
+import com.example.climate_backend.domain.verification.dto.request.VerificationRequestDto;
 import com.example.climate_backend.domain.verification.dto.response.VerificationResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +12,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,4 +62,20 @@ public class MyPageController {
     public ResponseEntity<List<VerificationResponseDto>> getMyLogs(@RequestParam String userId) {
         return ResponseEntity.ok(myPageService.getMyLogs(userId));
     }
+
+    @Operation(summary = "멍로깅 기록 수정")
+    @PutMapping("/logs")
+    public ResponseEntity<VerificationResponseDto> updateMyLogs(@RequestParam String userId, @RequestParam Long verificationId,
+        @RequestPart(value = "verification") VerificationRequestDto verificationRequestDto,
+        @RequestPart(value = "files", required = false) MultipartFile[] files) {
+        return ResponseEntity.ok(myPageService.updateMyLogs(userId, verificationId, verificationRequestDto, files));
+    }
+
+    @Operation(summary = "멍로깅 기록 삭제")
+    @DeleteMapping("/logs")
+    public ResponseEntity<String> deleteMyLogs(@RequestParam String userId, @RequestParam Long verificationId) {
+        myPageService.deleteMyLogs(userId, verificationId);
+        return ResponseEntity.ok("멍로깅 기록이 삭제되었습니다.");
+    }
+
 }
