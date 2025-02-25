@@ -2,6 +2,7 @@ package com.example.climate_backend.domain.verification.entity;
 
 import com.example.climate_backend.domain.user.entity.User;
 import com.example.climate_backend.domain.verification.dto.request.VerificationRequestDto;
+import com.example.climate_backend.domain.verification.dto.request.VerificationUpdateRequestDto;
 import com.example.climate_backend.domain.verification.enums.VerificationStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -65,11 +66,8 @@ public class Verification {
         this.status = VerificationStatus.REJECTED;
     }
 
-    public void update(VerificationRequestDto dto, List<String> imageUrls) {
-        this.courseName = dto.getCourseName();
-        this.date = dto.getDate();
-        this.path = dto.getPath();
-        this.uploadedImages = imageUrls;
+    public void update(VerificationUpdateRequestDto verificationUpdateRequestDto) {
+        this.courseName = verificationUpdateRequestDto.getCourseName();
     }
 
     public void uploadCaptureImage(String captureImage) {

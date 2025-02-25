@@ -7,6 +7,7 @@ import com.example.climate_backend.domain.user.dto.response.MyPageResDto;
 import com.example.climate_backend.domain.user.entity.User;
 import com.example.climate_backend.domain.user.repository.UserRepository;
 import com.example.climate_backend.domain.verification.dto.request.VerificationRequestDto;
+import com.example.climate_backend.domain.verification.dto.request.VerificationUpdateRequestDto;
 import com.example.climate_backend.domain.verification.dto.response.VerificationResponseDto;
 import com.example.climate_backend.domain.verification.entity.Verification;
 import com.example.climate_backend.domain.verification.repository.VerificationRepository;
@@ -77,19 +78,11 @@ public class MyPageService {
     }
 
     @Transactional
-    public VerificationResponseDto updateMyLogs(String userId, Long verificationId, VerificationRequestDto verificationRequestDto, MultipartFile[] files) {
+    public VerificationResponseDto updateMyLogs(String userId, Long verificationId, VerificationUpdateRequestDto verificationUpdateRequestDto) {
         User user = findExistingUserByUserId(userId);
         Verification verification =findExistingVerificationById(verificationId);
 
-        List<String> imageUrls = new ArrayList<>();
-        if (files != null) {
-            for (MultipartFile file : files) {
-                String imageUrl = s3Service.uploadImage(file);
-                imageUrls.add(imageUrl);
-            }
-        }
-
-        verification.update(verificationRequestDto, imageUrls);
+        verification.update(verificationUpdateRequestDto);
         return VerificationResponseDto.fromEntity(verification);
     }
 

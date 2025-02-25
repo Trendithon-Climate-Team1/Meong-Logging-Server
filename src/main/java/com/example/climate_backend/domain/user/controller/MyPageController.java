@@ -5,6 +5,7 @@ import com.example.climate_backend.domain.user.dto.request.MyPageReqDto;
 import com.example.climate_backend.domain.user.dto.response.MyPageResDto;
 import com.example.climate_backend.domain.user.service.MyPageService;
 import com.example.climate_backend.domain.verification.dto.request.VerificationRequestDto;
+import com.example.climate_backend.domain.verification.dto.request.VerificationUpdateRequestDto;
 import com.example.climate_backend.domain.verification.dto.response.VerificationResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,9 +67,8 @@ public class MyPageController {
     @Operation(summary = "멍로깅 기록 수정")
     @PutMapping("/logs")
     public ResponseEntity<VerificationResponseDto> updateMyLogs(@RequestParam String userId, @RequestParam Long verificationId,
-        @RequestPart(value = "verification") VerificationRequestDto verificationRequestDto,
-        @RequestPart(value = "files", required = false) MultipartFile[] files) {
-        return ResponseEntity.ok(myPageService.updateMyLogs(userId, verificationId, verificationRequestDto, files));
+        @RequestBody VerificationUpdateRequestDto verificationUpdateRequestDto) {
+        return ResponseEntity.ok(myPageService.updateMyLogs(userId, verificationId, verificationUpdateRequestDto));
     }
 
     @Operation(summary = "멍로깅 기록 삭제")
