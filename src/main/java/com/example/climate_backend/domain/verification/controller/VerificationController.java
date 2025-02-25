@@ -1,6 +1,7 @@
 package com.example.climate_backend.domain.verification.controller;
 
 import com.example.climate_backend.domain.verification.dto.request.VerificationRequestDto;
+import com.example.climate_backend.domain.verification.dto.response.VerificationRecommendResponseDto;
 import com.example.climate_backend.domain.verification.dto.response.VerificationResponseDto;
 import com.example.climate_backend.domain.verification.enums.VerificationStatus;
 import com.example.climate_backend.domain.verification.service.VerificationService;
@@ -47,6 +48,21 @@ public class VerificationController {
     public ResponseEntity<List<VerificationResponseDto>> getVerificationsByStatus(
             @RequestParam(required = false) VerificationStatus status) {
         return ResponseEntity.ok(verificationService.getVerificationsByStatus(status));
+    }
+
+    @Operation(summary = "플로깅 캡처본 저장(추천)")
+    @PostMapping("/recommend/{verificationId}")
+    public ResponseEntity<String> saveRecommend(
+        @PathVariable Long verificationId,
+        @RequestPart(value = "files") MultipartFile file) {
+        verificationService.saveRecommend(verificationId, file);
+        return ResponseEntity.ok("플로깅 캡처본이 저장되었습니다.");
+    }
+
+    @Operation(summary = "플로깅 추천 조회")
+    @GetMapping("recommend/{verificationId}")
+    public ResponseEntity<List<VerificationRecommendResponseDto>> getRecommend(@PathVariable Long verificationId) {
+        return ResponseEntity.ok(verificationService.getRecommend(verificationId));
     }
 
 }
