@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentResDto {
     private String comment;
+    private String petName;
     private String userId;
     private Long postId;
     private LocalDateTime createdAt;
@@ -18,6 +19,7 @@ public class CommentResDto {
 
     public CommentResDto(Comment comment) {
         this.comment = comment.getComment();
+        this.petName = comment.getUser().getPetName();
         this.userId = comment.getUser().getUserId();
         this.postId = comment.getPost().getId();
         this.createdAt = comment.getCreatedAt();
