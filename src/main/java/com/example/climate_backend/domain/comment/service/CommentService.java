@@ -42,11 +42,10 @@ public class CommentService {
     }
 
     public List<CommentResDto> getAllComment(Long postId) {
-
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다." + postId));
 
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findByPost(post);
         return comments.stream()
             .map(CommentResDto::new)
             .collect(Collectors.toList());
