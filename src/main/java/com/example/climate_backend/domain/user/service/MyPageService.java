@@ -6,8 +6,12 @@ import com.example.climate_backend.domain.user.dto.request.MyPageReqDto;
 import com.example.climate_backend.domain.user.dto.response.MyPageResDto;
 import com.example.climate_backend.domain.user.entity.User;
 import com.example.climate_backend.domain.user.repository.UserRepository;
+import com.example.climate_backend.domain.verification.dto.request.VerificationRequestDto;
 import com.example.climate_backend.domain.verification.dto.response.VerificationResponseDto;
+import com.example.climate_backend.domain.verification.entity.Verification;
+import com.example.climate_backend.domain.verification.repository.VerificationRepository;
 import com.example.climate_backend.global.common.S3Service;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,7 @@ public class MyPageService {
 
     private final UserRepository userRepository;
     private final S3Service s3Service;
+    private final VerificationRepository verificationRepository;
 
     public MyPageResDto getMyPage(String userId) {
         User user = findExistingUserByUserId(userId);
@@ -67,9 +72,38 @@ public class MyPageService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
+    public VerificationResponseDto updateMyLogs(String userId, Long verificationId, VerificationRequestDto verificationRequestDto, MultipartFile[] files) {
+        User user = findExistingUserByUserId(userId);
+        Verification verification =findExistingVerificationById(verificationId);
+
+        List<String> imageUrls = new ArrayList<>();
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String imageUrl = s3Service.uploadImage(file);
+                imageUrls.add(imageUrl);
+            }
+        }
+
+        verification.update(verificationRequestDto, imageUrls);
+        return VerificationResponseDto.fromEntity(verification);
+    }
+
+    @Transactional
+    public void deleteMyLogs(String userId, Long verificationId) {
+        User user = findExistingUserByUserId(userId);
+        Verification verification = findExistingVerificationById(verificationId);
+        verificationRepository.delete(verification);
+    }
+
     private User findExistingUserByUserId(String userId) {
         return userRepository.findByUserId(userId)
             .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+    }
+
+    private Verification findExistingVerificationById(Long verificationId) {
+        return verificationRepository.findById(verificationId)
+            .orElseThrow(() -> new RuntimeException("존재하지 않는 멍로깅입니다."));
     }
 
 }
