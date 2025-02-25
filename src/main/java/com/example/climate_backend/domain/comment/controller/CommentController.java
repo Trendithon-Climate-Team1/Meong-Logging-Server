@@ -8,14 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,10 +25,10 @@ public class CommentController {
         return ResponseEntity.ok("댓글이 등록되었습니다");
     }
 
-    @Operation(summary = "모든 댓글 조회")
-    @GetMapping
-    public ResponseEntity<List<CommentResDto>> getAllComment(@RequestBody CommentReqDto commentReqDto) {
-        return ResponseEntity.ok(commentService.getAllComment(commentReqDto.getPostId()));
+    @Operation(summary = "게시물별 모든 댓글 조회")
+    @GetMapping("/{postId}")
+    public ResponseEntity<List<CommentResDto>> getAllComment(@PathVariable Long postId) {
+        return ResponseEntity.ok(commentService.getAllComment(postId));
     }
 
     @Operation(summary = "댓글 수정")
