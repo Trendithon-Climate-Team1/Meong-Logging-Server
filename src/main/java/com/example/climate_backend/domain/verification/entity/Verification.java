@@ -37,6 +37,9 @@ public class Verification {
     @CollectionTable(name = "verification_images", joinColumns = @JoinColumn(name = "verification_id"))
     private List<String> uploadedImages;  // 다중 이미지 지원
 
+    @Column(name = "capture_image")
+    private String captureImage;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private VerificationStatus status;
@@ -67,5 +70,9 @@ public class Verification {
         this.date = dto.getDate();
         this.path = dto.getPath();
         this.uploadedImages = imageUrls;
+    }
+
+    public void uploadCaptureImage(String captureImage) {
+        this.captureImage = captureImage;
     }
 }
