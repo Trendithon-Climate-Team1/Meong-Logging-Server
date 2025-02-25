@@ -1,7 +1,5 @@
 package com.example.climate_backend.domain.post.dto.response;
 
-import com.example.climate_backend.domain.like.repository.LikeRepository;
-import com.example.climate_backend.domain.like.service.LikeService;
 import com.example.climate_backend.domain.post.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,7 @@ public class PostResponseDto {
     private String imageUrl;
     private String petName;
     private int likeCount;
+    private int commentCount;
     private LocalDateTime createdAt;
     private Long userId;
 
@@ -27,6 +26,7 @@ public class PostResponseDto {
         this.imageUrl = post.getImageUrl();
         this.petName = post.getUser().getPetName();
         this.likeCount = post.getLikeCount();
+        this.commentCount = post.getCommentCount();
         this.userId = post.getUser().getId();
         this.createdAt = post.getCreatedAt();
     }
